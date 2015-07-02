@@ -21,16 +21,28 @@ function authService (opts) {
   function putUser (request, reply) {
     console.log(request.payload); 
     var user = request.payload;
-    auth.put(user, function(err,userChecked){
+    auth.put(user, function(err, userid){
       if (err) return reply (err);
-      reply(userChecked);
+      reply(userid + '\n');
     })
-
+  }
+  function getUser (request, reply) {
+      console.log('getUser');
+      console.log(request.payload); 
+      var user = request.query;
+      auth.get(user, function(err, userdata){
+          if (err) return reply (err);
+          reply(userdata + '\n');
+      })
+  }
+  function login (request, reply) {
+      console.log(request.payload); 
+      reply(userid + '\n');
   }
 
-  // server.route({ method: 'GET', path: '/user', handler: getUser })
+  server.route({ method: 'GET', path: '/user', handler: getUser })
   server.route({ method: 'PUT', path: '/user', handler: putUser })
-  // server.route({ method: 'PUT', path: '/user', handler: hello })
+  server.route({ method: 'POST', path: '/login', handler: login })
 
   return server
 }
