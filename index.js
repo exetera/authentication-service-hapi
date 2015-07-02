@@ -5,7 +5,7 @@
 var Hapi = require('hapi')
 var xtend = require('xtend')
 var minimist = require('minimist')
-var auth = require('@piemme/authentication-service')
+var auth = require('@piemme/authentication-service')()
 
 var defaults = {
   port: 8989
@@ -18,11 +18,19 @@ function authService (opts) {
 
   server.connection({ port: opts.port })
 
-  function hello (request, reply) {
-    reply('Hello World')
+  function putUser (request, reply) {
+    console.log(request.payload); 
+    var user = request.payload;
+    auth.put(user, function(err,userChecked){
+      if (err) return reply (err);
+      reply(userChecked);
+    })
+
   }
 
-  server.route({ method: 'GET', path: '/', handler: hello })
+  // server.route({ method: 'GET', path: '/user', handler: getUser })
+  server.route({ method: 'PUT', path: '/user', handler: putUser })
+  // server.route({ method: 'PUT', path: '/user', handler: hello })
 
   return server
 }
